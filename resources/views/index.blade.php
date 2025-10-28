@@ -73,14 +73,20 @@ function updateMessageList(messages) {
         `;
     } else {
         let html = '';
+        const showRouteBase = '{{ route("sms-catcher.show", ":id") }}'.replace(':id', '');
+        
         messages.forEach(message => {
-            const limitedBody = message.body.replace(/[\n\r]/g, ' ').substring(0, 40) + (message.body.length > 40 ? '...' : '');
-            const timeAgo = formatTimeAgo(new Date(message.timestamp));
+            // Apply same text processing as server-side: replace line breaks and limit to 40 chars
+            const processedBody = message.body.replace(/[\n\r\n\r]/g, ' ');
+            const limitedBody = processedBody.length > 40 ? processedBody.substring(0, 40) + '...' : processedBody;
+            
+            // Use consistent time formatting (basic implementation matching server style)
+            const timeAgo = formatTimeAgoLaravel(new Date(message.timestamp));
             
             html += `
-                <a href="{{ route('sms-catcher.show', '') }}/${message.id}" class="message">
+                <a href="${showRouteBase}${message.id}" class="message">
                     <div><strong>${escapeHtml(message.to)}</strong></div>
-                    <div>${escapeHtml(limitedBody)}</div>
+                    <div>${linkifyText(limitedBody)}</div>
                     <small>${timeAgo}</small>
                 </a>
             `;
@@ -88,7 +94,7 @@ function updateMessageList(messages) {
         messageList.innerHTML = html;
     }
     
-    // Update message count
+    // Update message count (consistent with server-side collection count)
     const countElement = document.querySelector('.panel-header strong');
     if (countElement) {
         const count = messages.length;
@@ -105,23 +111,48 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-function formatTimeAgo(date) {
+function formatTimeAgoLaravel(date) {
     const now = new Date();
     const diffMs = now - date;
     const diffSecs = Math.floor(diffMs / 1000);
     const diffMins = Math.floor(diffSecs / 60);
     const diffHours = Math.floor(diffMins / 60);
     const diffDays = Math.floor(diffHours / 24);
+    const diffWeeks = Math.floor(diffDays / 7);
+    const diffMonths = Math.floor(diffDays / 30);
+    const diffYears = Math.floor(diffDays / 365);
     
-    if (diffDays > 0) {
+    // Match Laravel Carbon's diffForHumans output as closely as possible
+    if (diffYears > 0) {
+        return `${diffYears} year${diffYears > 1 ? 's' : ''} ago`;
+    } else if (diffMonths > 0) {
+        return `${diffMonths} month${diffMonths > 1 ? 's' : ''} ago`;
+    } else if (diffWeeks > 0) {
+        return `${diffWeeks} week${diffWeeks > 1 ? 's' : ''} ago`;
+    } else if (diffDays > 0) {
         return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
     } else if (diffHours > 0) {
         return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
     } else if (diffMins > 0) {
         return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+    } else if (diffSecs > 5) {
+        return `${diffSecs} second${diffSecs > 1 ? 's' : ''} ago`;
     } else {
-        return 'Just now';
+        return 'a few seconds ago';
     }
+}
+
+function linkifyText(text) {
+    // Basic URL linkification matching server-side UrlProcessor logic
+    const urlPattern = /(https?:\/\/[^\s<>"{}|\\^`\[\]]+)|(\b(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}(?:\/[^\s<>"{}|\\^`\[\]]*)?)/gi;
+    
+    return escapeHtml(text).replace(urlPattern, function(url) {
+        let href = url;
+        if (!href.match(/^https?:\/\//)) {
+            href = 'http://' + href;
+        }
+        return `<a href="${href}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+    });
 }
 
 // Initialize on page load
