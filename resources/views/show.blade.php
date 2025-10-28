@@ -12,9 +12,9 @@
                     <form method="POST" action="{{ route('sms-catcher.destroy', $message['id']) }}">
                         @csrf
                         @method('DELETE')
-                        <button class="btn" type="submit">Delete</button>
+                        <button class="btn btn-danger" type="submit">Delete</button>
                     </form>
-                    <a class="btn" href="{{ route('sms-catcher.index') }}">Back</a>
+                    <button class="btn btn-primary" href="{{ route('sms-catcher.index') }}">Back</button>
                 </div>
             </div>
             <div style="padding: 1.5rem; display: grid; gap: 1rem;">
