@@ -46,6 +46,7 @@ class SmsCatcherServiceProvider extends ServiceProvider
     {
         Route::group(config('sms-catcher.route'), function () {
             Route::get('/', [SmsMessageController::class, 'index'])->name('sms-catcher.index');
+            Route::get('/api/messages', [SmsMessageController::class, 'api'])->name('sms-catcher.api');
             Route::get('/messages/{id}', [SmsMessageController::class, 'show'])->name('sms-catcher.show');
             Route::delete('/messages/{id}', [SmsMessageController::class, 'destroy'])->name('sms-catcher.destroy');
             Route::delete('/', [SmsMessageController::class, 'clear'])->name('sms-catcher.clear');
