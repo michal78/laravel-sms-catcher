@@ -204,8 +204,16 @@
 </style>
 
 <script>
+// Valid device options
+const validDevices = ['iphone-14', 'iphone-se', 'samsung-s24', 'pixel-8', 'generic'];
+const defaultDevice = 'generic';
+
 // Device switching functionality
 function changeDevice(deviceType) {
+    if (!validDevices.includes(deviceType)) {
+        deviceType = defaultDevice;
+    }
+    
     const phoneShell = document.getElementById('phoneShell');
     if (phoneShell) {
         phoneShell.setAttribute('data-device', deviceType);
@@ -215,18 +223,30 @@ function changeDevice(deviceType) {
     }
 }
 
-// Load saved device preference on page load
+// Initialize device selection on page load
 document.addEventListener('DOMContentLoaded', function() {
-    const savedDevice = localStorage.getItem('sms-catcher-device-preference');
-    if (savedDevice) {
-        const selector = document.getElementById('deviceSelector');
-        const phoneShell = document.getElementById('phoneShell');
-        
-        if (selector && phoneShell) {
-            selector.value = savedDevice;
-            phoneShell.setAttribute('data-device', savedDevice);
-        }
+    const selector = document.getElementById('deviceSelector');
+    const phoneShell = document.getElementById('phoneShell');
+    
+    if (!selector || !phoneShell) return;
+    
+    // Add event listener to selector
+    selector.addEventListener('change', function() {
+        changeDevice(this.value);
+    });
+    
+    // Load saved device preference or use default
+    let selectedDevice = localStorage.getItem('sms-catcher-device-preference') || defaultDevice;
+    
+    // Validate saved device is still valid
+    if (!validDevices.includes(selectedDevice)) {
+        selectedDevice = defaultDevice;
+        localStorage.setItem('sms-catcher-device-preference', selectedDevice);
     }
+    
+    // Set both selector and phone shell to the validated device
+    selector.value = selectedDevice;
+    phoneShell.setAttribute('data-device', selectedDevice);
 });
 </script>
 @endpush
@@ -278,12 +298,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="meta">Select device to preview message appearance</div>
                 </div>
                 <div class="device-selector">
-                    <select id="deviceSelector" class="btn" onchange="changeDevice(this.value)">
+                    <select id="deviceSelector" class="btn">
                         <option value="iphone-14">iPhone 14</option>
                         <option value="iphone-se">iPhone SE</option>
                         <option value="samsung-s24">Samsung Galaxy S24</option>
                         <option value="pixel-8">Google Pixel 8</option>
-                        <option value="generic" selected>Generic</option>
+                        <option value="generic">Generic</option>
                     </select>
                 </div>
             </div>
