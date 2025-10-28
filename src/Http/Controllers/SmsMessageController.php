@@ -21,6 +21,13 @@ class SmsMessageController extends Controller
         ]);
     }
 
+    public function api(): \Illuminate\Http\JsonResponse
+    {
+        return response()->json([
+            'messages' => $this->repository->all(),
+        ]);
+    }
+
     public function show(string $id): View|Factory
     {
         $message = $this->repository->find($id);
