@@ -80,6 +80,8 @@
             text-decoration: none;
             color: inherit;
             transition: background 0.15s ease;
+            word-break: break-word;
+            overflow-wrap: break-word;
         }
 
         .message:hover {
@@ -122,6 +124,19 @@
             background: rgba(148, 163, 184, 0.25);
             align-self: flex-start;
             line-height: 1.4;
+            word-break: break-all;
+            overflow-wrap: break-word;
+            hyphens: auto;
+        }
+
+        .bubble a {
+            color: #38bdf8;
+            text-decoration: underline;
+            word-break: break-all;
+        }
+
+        .bubble a:hover {
+            color: #0ea5e9;
         }
 
         .meta {

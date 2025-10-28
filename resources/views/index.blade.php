@@ -19,7 +19,7 @@
             @forelse($messages as $message)
                 <a href="{{ route('sms-catcher.show', $message['id']) }}" class="message">
                     <div><strong>{{ $message['to'] }}</strong></div>
-                    <div>{{ \Illuminate\Support\Str::limit($message['body'], 120) }}</div>
+                    <div>{!! \SmsCatcher\Helpers\UrlProcessor::linkify(\Illuminate\Support\Str::limit($message['body'], 120)) !!}</div>
                     <small>{{ \Carbon\Carbon::parse($message['timestamp'])->diffForHumans() }}</small>
                 </a>
             @empty
