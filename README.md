@@ -4,10 +4,11 @@ A development-only Laravel package that captures SMS notifications and displays 
 
 ## Installation
 
-Require the package in your application as a dev dependency:
+Require the package in your application as a dev dependency. Until a tagged
+release is published you will need to target the `dev-main` branch explicitly:
 
 ```bash
-composer require --dev michal78/laravel-sms-catcher
+composer require --dev michal78/laravel-sms-catcher:dev-main
 ```
 
 The package is auto-discovered by Laravel, but you can manually register the service provider if you have discovery disabled:
