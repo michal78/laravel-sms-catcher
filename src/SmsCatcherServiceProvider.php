@@ -62,6 +62,9 @@ class SmsCatcherServiceProvider extends ServiceProvider
             /** @var MessageRepository $repository */
             $repository = $this->app->make(MessageRepository::class);
             $repository->storeFromEvent($event);
+            
+            // Return false to prevent the SMS from being actually sent
+            return false;
         });
     }
 }
