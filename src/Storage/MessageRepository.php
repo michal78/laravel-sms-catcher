@@ -2,10 +2,16 @@
 
 namespace SmsCatcher\Storage;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Notifications\Events\NotificationSending;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use JsonException;
+use JsonSerializable;
+use ReflectionException;
+use ReflectionProperty;
+use Stringable;
+use Throwable;
 
 class MessageRepository
 {
@@ -116,42 +122,202 @@ class MessageRepository
         }
 
         if (is_array($smsMessage)) {
-            $body = $smsMessage['body'] ?? $smsMessage['text'] ?? null;
-
-            if ($body === null) {
-                return null;
-            }
-
-            $normalized = ['body' => $body];
-
-            if (isset($smsMessage['from'])) {
-                $normalized['from'] = $smsMessage['from'];
-            }
-
-            $normalized['extra'] = collect($smsMessage)->except(['body', 'text', 'from'])->toArray();
-
-            return $normalized;
+            return $this->normalizeArrayPayload($smsMessage);
         }
 
         if (is_object($smsMessage)) {
-            $body = $smsMessage->body ?? $smsMessage->text ?? null;
+            if ($smsMessage instanceof Arrayable) {
+                $normalized = $this->normalizeArrayPayload($smsMessage->toArray());
 
-            if ($body === null) {
-                return null;
+                if ($normalized !== null) {
+                    return $normalized;
+                }
             }
 
-            $normalized = ['body' => $body];
+            if ($smsMessage instanceof JsonSerializable) {
+                $serialized = $smsMessage->jsonSerialize();
 
-            if (isset($smsMessage->from)) {
-                $normalized['from'] = $smsMessage->from;
+                if (is_string($serialized)) {
+                    return ['body' => $serialized];
+                }
+
+                if (is_array($serialized)) {
+                    $normalized = $this->normalizeArrayPayload($serialized);
+
+                    if ($normalized !== null) {
+                        return $normalized;
+                    }
+                }
             }
 
-            $extra = collect(get_object_vars($smsMessage))->except(['body', 'text', 'from'])->toArray();
-            if (!empty($extra)) {
-                $normalized['extra'] = $extra;
+            $vars = get_object_vars($smsMessage);
+            if (!empty($vars)) {
+                $normalized = $this->normalizeArrayPayload($vars);
+
+                if ($normalized !== null) {
+                    return $normalized;
+                }
             }
 
-            return $normalized;
+            $castVars = $this->extractObjectVariables($smsMessage);
+            if (!empty($castVars)) {
+                $normalized = $this->normalizeArrayPayload($castVars);
+
+                if ($normalized !== null) {
+                    return $normalized;
+                }
+            }
+
+            $body = $this->readPropertyValue($smsMessage, ['body', 'text', 'content', 'contents', 'message']);
+
+            if ($body !== null) {
+                $normalized = ['body' => $body];
+
+                $from = $this->readPropertyValue($smsMessage, ['from', 'sender', 'originator']);
+
+                if ($from !== null) {
+                    $normalized['from'] = $from;
+                }
+
+                return $normalized;
+            }
+        }
+
+        return null;
+    }
+
+    protected function normalizeArrayPayload(array $payload): ?array
+    {
+        $payload = $this->sanitizeObjectVars($payload);
+
+        $body = $this->extractStringFromArray($payload, ['body', 'text', 'content', 'contents', 'message']);
+
+        if ($body === null) {
+            return null;
+        }
+
+        foreach (['body', 'text', 'content', 'contents', 'message'] as $key) {
+            unset($payload[$key]);
+        }
+
+        $normalized = ['body' => $body];
+
+        $from = $this->extractStringFromArray($payload, ['from', 'sender', 'originator']);
+
+        if ($from !== null) {
+            foreach (['from', 'sender', 'originator'] as $key) {
+                unset($payload[$key]);
+            }
+
+            $normalized['from'] = $from;
+        }
+
+        $extra = array_filter($payload, fn ($value) => $value !== null);
+
+        if (!empty($extra)) {
+            $normalized['extra'] = $extra;
+        }
+
+        return $normalized;
+    }
+
+    protected function extractStringFromArray(array $payload, array $candidates): ?string
+    {
+        foreach ($candidates as $key) {
+            if (!array_key_exists($key, $payload)) {
+                continue;
+            }
+
+            $string = $this->stringify($payload[$key]);
+
+            if ($string !== null) {
+                return $string;
+            }
+        }
+
+        return null;
+    }
+
+    protected function stringify(mixed $value): ?string
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        if (is_string($value)) {
+            return $value;
+        }
+
+        if (is_scalar($value)) {
+            return (string) $value;
+        }
+
+        if ($value instanceof Stringable) {
+            return (string) $value;
+        }
+
+        if (is_object($value) && method_exists($value, '__toString')) {
+            return (string) $value;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    protected function extractObjectVariables(object $smsMessage): array
+    {
+        try {
+            return $this->sanitizeObjectVars((array) $smsMessage);
+        } catch (Throwable) {
+            return [];
+        }
+    }
+
+    protected function sanitizeObjectVars(array $vars): array
+    {
+        $sanitized = [];
+
+        foreach ($vars as $key => $value) {
+            if (is_string($key)) {
+                $key = preg_replace('/^\x00.*\x00/', '', $key);
+            }
+
+            $sanitized[$key] = $value;
+        }
+
+        return $sanitized;
+    }
+
+    protected function readPropertyValue(object $smsMessage, array $properties): ?string
+    {
+        foreach ($properties as $property) {
+            if (!property_exists($smsMessage, $property)) {
+                continue;
+            }
+
+            try {
+                $reflection = new ReflectionProperty($smsMessage, $property);
+
+                if (!$reflection->isPublic()) {
+                    $reflection->setAccessible(true);
+                }
+
+                if (method_exists($reflection, 'isInitialized') && !$reflection->isInitialized($smsMessage)) {
+                    continue;
+                }
+
+                $value = $reflection->getValue($smsMessage);
+            } catch (ReflectionException|Throwable) {
+                continue;
+            }
+
+            $string = $this->stringify($value);
+
+            if ($string !== null) {
+                return $string;
+            }
         }
 
         return null;
