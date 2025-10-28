@@ -46,7 +46,7 @@
             </div>
             <div class="phone-shell">
                 <div class="phone-screen">
-                    <div class="bubble">{!! nl2br(e($message['body'])) !!}</div>
+                    <div class="bubble">{!! nl2br(\SmsCatcher\Helpers\UrlProcessor::linkify($message['body'])) !!}</div>
                 </div>
             </div>
         </div>
