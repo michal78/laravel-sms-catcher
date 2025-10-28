@@ -150,19 +150,46 @@
         }
 
         .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
             border: none;
             background: rgba(148, 163, 184, 0.25);
             color: inherit;
             padding: 0.5rem 0.85rem;
             border-radius: 0.5rem;
             cursor: pointer;
-            transition: background 0.2s ease, transform 0.2s ease;
+            transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
             font-size: 0.9rem;
+            text-decoration: none;
+            font-weight: 500;
         }
 
         .btn:hover {
             background: rgba(56, 189, 248, 0.25);
             transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #ffffff;
+            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.25);
+        }
+
+        .btn-primary:hover {
+            background: #0ea5e9;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #f87171, #b91c1c);
         }
 
         .empty {

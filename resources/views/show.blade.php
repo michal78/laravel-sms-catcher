@@ -14,7 +14,7 @@
                         @method('DELETE')
                         <button class="btn btn-danger" type="submit">Delete</button>
                     </form>
-                    <button class="btn btn-primary" href="{{ route('sms-catcher.index') }}">Back</button>
+                    <a class="btn btn-primary" href="{{ route('sms-catcher.index') }}">Back</a>
                 </div>
             </div>
             <div style="padding: 1.5rem; display: grid; gap: 1rem;">
