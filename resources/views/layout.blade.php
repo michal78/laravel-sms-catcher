@@ -96,6 +96,19 @@
             color: var(--muted);
         }
 
+        .message-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .message-from {
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+
         .phone-shell {
             width: 280px;
             margin: 2rem auto;
@@ -164,6 +177,9 @@
             font-size: 0.9rem;
             text-decoration: none;
             font-weight: 500;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
         }
 
         .btn:hover {
