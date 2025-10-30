@@ -1,3 +1,7 @@
+[![Latest Stable Version](https://img.shields.io/packagist/v/michal78/laravel-sms-catcher.svg)](https://packagist.org/packages/michal78/laravel-sms-catcher)
+[![Total Downloads](https://img.shields.io/packagist/dt/michal78/laravel-sms-catcher.svg)](https://packagist.org/packages/michal78/laravel-sms-catcher)
+[![License](https://img.shields.io/packagist/l/michal78/laravel-sms-catcher.svg)](https://packagist.org/packages/michal78/laravel-sms-catcher)
+
 # Laravel SMS Catcher
 
 A development-only Laravel package that captures SMS notifications and displays them in a beautiful, phone-inspired inbox – think Mailpit, but for your `sms` notification channel.
