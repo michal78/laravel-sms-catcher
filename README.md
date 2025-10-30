@@ -2,6 +2,11 @@
 
 A development-only Laravel package that captures SMS notifications and displays them in a beautiful, phone-inspired inbox – think Mailpit, but for your `sms` notification channel.
 
+<img width="967" height="598" alt="image" src="https://github.com/user-attachments/assets/9ef222e5-6a16-4fbb-a032-2558cb9edffa" />
+
+<img width="943" height="1710" alt="image" src="https://github.com/user-attachments/assets/be6b171d-9fcb-467c-9093-1f67faac35cf" />
+
+
 ## Installation
 
 Require the package in your application as a dev dependency. Until a tagged
