@@ -2,10 +2,24 @@
 
 A development-only Laravel package that captures SMS notifications and displays them in a beautiful, phone-inspired inbox – think Mailpit, but for your `sms` notification channel.
 
-<img width="967" height="598" alt="image" src="https://github.com/user-attachments/assets/9ef222e5-6a16-4fbb-a032-2558cb9edffa" />
+## Screenshots
 
-<img width="943" height="1710" alt="image" src="https://github.com/user-attachments/assets/be6b171d-9fcb-467c-9093-1f67faac35cf" />
+### SMS Inbox Dashboard
+Click to view full-size images:
 
+<a href="https://github.com/user-attachments/assets/9ef222e5-6a16-4fbb-a032-2558cb9edffa" target="_blank">
+  <img width="600" alt="SMS Catcher inbox showing list of captured messages" src="https://github.com/user-attachments/assets/9ef222e5-6a16-4fbb-a032-2558cb9edffa" />
+</a>
+
+*The main inbox view displays all captured SMS messages with sender, recipient, and timestamp information.*
+
+### Message Detail View
+
+<a href="https://github.com/user-attachments/assets/be6b171d-9fcb-467c-9093-1f67faac35cf" target="_blank">
+  <img width="600" alt="SMS message detail view with phone-style preview" src="https://github.com/user-attachments/assets/be6b171d-9fcb-467c-9093-1f67faac35cf" />
+</a>
+
+*Click any message to see the full details in a beautiful phone-style preview, making it easy to verify how your SMS will appear to recipients.*
 
 ## Installation
 
