@@ -79,13 +79,20 @@ function updateMessageList(messages) {
             // Apply same text processing as server-side: replace line breaks and limit to 40 chars
             const processedBody = message.body.replace(/[\n\r\n\r]/g, ' ');
             const limitedBody = processedBody.length > 40 ? processedBody.substring(0, 40) + '...' : processedBody;
-            
+
             // Use consistent time formatting (basic implementation matching server style)
             const timeAgo = formatTimeAgoLaravel(new Date(message.timestamp));
-            
+
+            const fromHtml = message.from
+                ? `<span class="message-from">From ${escapeHtml(message.from)}</span>`
+                : '';
+
             html += `
                 <a href="${showRouteBase}${message.id}" class="message">
-                    <div><strong>${escapeHtml(message.to)}</strong></div>
+                    <div class="message-header">
+                        <strong>${escapeHtml(message.to)}</strong>
+                        ${fromHtml}
+                    </div>
                     <div>${linkifyText(limitedBody)}</div>
                     <small>${timeAgo}</small>
                 </a>
@@ -195,7 +202,12 @@ window.addEventListener('beforeunload', function() {
         <div class="message-list">
             @forelse($messages as $message)
                 <a href="{{ route('sms-catcher.show', $message['id']) }}" class="message">
-                    <div><strong>{{ $message['to'] }}</strong></div>
+                    <div class="message-header">
+                        <strong>{{ $message['to'] }}</strong>
+                        @if(!empty($message['from']))
+                            <span class="message-from">From {{ $message['from'] }}</span>
+                        @endif
+                    </div>
                     <div>{!! \SmsCatcher\Helpers\UrlProcessor::linkify(\Illuminate\Support\Str::limit(str_replace(["\n", "\r\n", "\r"], ' ', $message['body']), 40)) !!}</div>
                     <small>{{ \Carbon\Carbon::parse($message['timestamp'])->diffForHumans() }}</small>
                 </a>
