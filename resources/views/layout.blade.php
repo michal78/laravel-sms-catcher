@@ -137,9 +137,9 @@
             background: rgba(148, 163, 184, 0.25);
             align-self: flex-start;
             line-height: 1.4;
-            word-break: break-all;
+            word-wrap: break-word;
             overflow-wrap: break-word;
-            hyphens: auto;
+            white-space: pre-wrap;
         }
 
         .bubble a {
