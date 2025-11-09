@@ -2,4 +2,5 @@
 composer.lock
 *.zip~
 .env
-.phpunit.result.cachescreenshots/
+.phpunit.result.cache
+screenshots/
