@@ -6,13 +6,49 @@
     <title>SMS Catcher</title>
     <style>
         :root {
-            color-scheme: light dark;
+            color-scheme: light;
             --bg: #f7fafc;
             --panel: #ffffff;
             --border: #e2e8f0;
             --accent: #38bdf8;
             --text: #1a202c;
             --muted: #4a5568;
+            --hover: rgba(56, 189, 248, 0.08);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                color-scheme: dark;
+                --bg: #0f172a;
+                --panel: #111827;
+                --border: #1f2937;
+                --accent: #38bdf8;
+                --text: #e2e8f0;
+                --muted: #94a3b8;
+                --hover: rgba(56, 189, 248, 0.12);
+            }
+        }
+
+        html[data-theme="light"] {
+            color-scheme: light;
+            --bg: #f7fafc;
+            --panel: #ffffff;
+            --border: #e2e8f0;
+            --accent: #38bdf8;
+            --text: #1a202c;
+            --muted: #4a5568;
+            --hover: rgba(56, 189, 248, 0.08);
+        }
+
+        html[data-theme="dark"] {
+            color-scheme: dark;
+            --bg: #0f172a;
+            --panel: #111827;
+            --border: #1f2937;
+            --accent: #38bdf8;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --hover: rgba(56, 189, 248, 0.12);
         }
 
         body {
@@ -20,6 +56,36 @@
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: var(--bg);
             color: var(--text);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1.25rem;
+            right: 1.25rem;
+            z-index: 10;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--text);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+        }
+
+        .theme-toggle:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 4px;
         }
 
         .container {
@@ -85,7 +151,7 @@
         }
 
         .message:hover {
-            background: rgba(56, 189, 248, 0.08);
+            background: var(--hover);
         }
 
         .message:last-child {
@@ -228,6 +294,7 @@
     @stack('head')
 </head>
 <body>
+<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch theme" title="Switch theme"></button>
 <div class="container">
     <h1>
         SMS Catcher
@@ -236,5 +303,87 @@
 
     @yield('content')
 </div>
+<script>
+    (function () {
+        const storageKey = 'theme-preference';
+        const toggle = document.getElementById('theme-toggle');
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+        function storedMode() {
+            const value = localStorage.getItem(storageKey);
+            return value === 'light' || value === 'dark' ? value : 'system';
+        }
+
+        function effectiveMode() {
+            const mode = storedMode();
+            if (mode === 'system') {
+                return mediaQuery.matches ? 'dark' : 'light';
+            }
+            return mode;
+        }
+
+        function applyMode(mode) {
+            if (mode === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+            } else if (mode === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+            }
+
+            const active = mode === 'system' ? effectiveMode() : mode;
+            if (mode === 'system') {
+                toggle.textContent = active === 'dark' ? '☀️' : '🌙';
+                toggle.setAttribute('aria-label', `Switch to ${active === 'dark' ? 'light' : 'dark'} mode`);
+                toggle.setAttribute('title', 'Follow system theme');
+            } else if (mode === 'dark') {
+                toggle.textContent = '☀️';
+                toggle.setAttribute('aria-label', 'Switch to light mode');
+                toggle.setAttribute('title', 'Dark mode enabled');
+            } else {
+                toggle.textContent = '🌙';
+                toggle.setAttribute('aria-label', 'Switch to dark mode');
+                toggle.setAttribute('title', 'Light mode enabled');
+            }
+
+            toggle.dataset.mode = mode;
+        }
+
+        function nextMode(current) {
+            if (current === 'system') {
+                return 'dark';
+            }
+            if (current === 'dark') {
+                return 'light';
+            }
+            return 'system';
+        }
+
+        toggle.addEventListener('click', function () {
+            const current = storedMode();
+            const mode = nextMode(current);
+            if (mode === 'system') {
+                localStorage.removeItem(storageKey);
+            } else {
+                localStorage.setItem(storageKey, mode);
+            }
+            applyMode(mode);
+        });
+
+        const handleChange = function () {
+            if (storedMode() === 'system') {
+                applyMode('system');
+            }
+        };
+
+        if (typeof mediaQuery.addEventListener === 'function') {
+            mediaQuery.addEventListener('change', handleChange);
+        } else if (typeof mediaQuery.addListener === 'function') {
+            mediaQuery.addListener(handleChange);
+        }
+
+        applyMode(storedMode());
+    }());
+</script>
 </body>
 </html>
