@@ -69,12 +69,7 @@ Trigger any Laravel notification that uses the `sms` channel and the payload wil
 - Click a message to view details and a phone-style preview.
 - Clear individual messages or wipe the entire inbox.
 
-Messages are stored as JSON within your application's storage folder (`storage/framework/sms-catcher.json`). The file is safe to delete; it will be recreated as new messages arrive.
-
-> **Important**: Add `sms-catcher.json` to your application's `.gitignore` file to prevent committing captured messages to your repository:
-> ```
-> sms-catcher.json
-> ```
+Messages are stored as JSON within your application's storage folder (`storage/logs/sms-catcher.json`). The file is safe to delete; it will be recreated as new messages arrive. Since the `storage/logs` directory is typically excluded from version control in Laravel applications, the captured messages will not be committed to your repository.
 
 > **Note**: The catcher inspects notifications by invoking their `toSms` method. Ensure your notifications implement this method and return either a string, array, or object containing the text body.
 
