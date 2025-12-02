@@ -3,4 +3,6 @@ composer.lock
 *.zip~
 .env
 .phpunit.result.cache
+.phpunit.cache/
 screenshots/
+sms-catcher.json
