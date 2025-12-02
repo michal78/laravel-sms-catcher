@@ -34,8 +34,10 @@ return [
     |--------------------------------------------------------------------------
     |
     | Messages are persisted to a lightweight JSON file inside the application's
-    | storage directory. You may change the location if required.
+    | storage directory. The default location is in the logs directory which is
+    | typically already excluded from version control. You may change the
+    | location if required.
     */
 
-    'storage_path' => storage_path('framework/sms-catcher.json'),
+    'storage_path' => storage_path('logs/sms-catcher.json'),
 ];
