@@ -1,0 +1,1 @@
+{"version":2,"defects":[],"times":{"Tests\\Storage\\MessageRepositoryTest::test_store_from_event_persists_normalized_message":0.023,"Tests\\Storage\\MessageRepositoryTest::test_store_from_event_falls_back_to_phone_property":0.001,"Tests\\Storage\\MessageRepositoryTest::test_delete_and_clear_remove_messages":0.002}}
