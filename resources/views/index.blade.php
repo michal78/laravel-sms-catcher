@@ -87,10 +87,16 @@ function updateMessageList(messages) {
                 ? `<span class="message-from">From ${escapeHtml(message.from)}</span>`
                 : '';
 
+            const unreadClass = message.read_at ? '' : 'message-unread';
+            const unreadDot = message.read_at ? '' : '<span class="unread-dot" aria-label="Unread message"></span>';
+
             html += `
-                <a href="${showRouteBase}${message.id}" class="message">
+                <a href="${showRouteBase}${message.id}" class="message ${unreadClass}">
                     <div class="message-header">
-                        <strong>${escapeHtml(message.to)}</strong>
+                        <div class="message-title">
+                            ${unreadDot}
+                            <strong>${escapeHtml(message.to)}</strong>
+                        </div>
                         ${fromHtml}
                     </div>
                     <div>${linkifyText(limitedBody)}</div>
@@ -201,9 +207,14 @@ window.addEventListener('beforeunload', function() {
         </div>
         <div class="message-list">
             @forelse($messages as $message)
-                <a href="{{ route('sms-catcher.show', $message['id']) }}" class="message">
+                <a href="{{ route('sms-catcher.show', $message['id']) }}" class="message {{ empty($message['read_at']) ? 'message-unread' : '' }}">
                     <div class="message-header">
-                        <strong>{{ $message['to'] }}</strong>
+                        <div class="message-title">
+                            @if(empty($message['read_at']))
+                                <span class="unread-dot" aria-label="Unread message"></span>
+                            @endif
+                            <strong>{{ $message['to'] }}</strong>
+                        </div>
                         @if(!empty($message['from']))
                             <span class="message-from">From {{ $message['from'] }}</span>
                         @endif

@@ -30,7 +30,7 @@ class SmsMessageController extends Controller
 
     public function show(string $id): View|Factory
     {
-        $message = $this->repository->find($id);
+        $message = $this->repository->markAsRead($id);
 
         abort_if($message === null, 404);
 
