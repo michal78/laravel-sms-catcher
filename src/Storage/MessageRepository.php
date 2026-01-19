@@ -45,6 +45,34 @@ class MessageRepository
         return null;
     }
 
+    public function markAsRead(string $id): ?array
+    {
+        $messages = $this->read();
+        $updatedMessage = null;
+
+        foreach ($messages as $index => $message) {
+            if ($message['id'] !== $id) {
+                continue;
+            }
+
+            if (empty($message['read_at'])) {
+                $message['read_at'] = now()->toIso8601String();
+                $messages[$index] = $message;
+            }
+
+            $updatedMessage = $message;
+            break;
+        }
+
+        if ($updatedMessage === null) {
+            return null;
+        }
+
+        $this->write($messages);
+
+        return $updatedMessage;
+    }
+
     public function delete(string $id): void
     {
         $messages = array_values(array_filter($this->read(), fn ($message) => $message['id'] !== $id));
@@ -93,6 +121,7 @@ class MessageRepository
             'body' => $content['body'],
             'notification' => $notification::class,
             'timestamp' => now()->toIso8601String(),
+            'read_at' => null,
             'extra' => $content['extra'] ?? [],
         ];
     }

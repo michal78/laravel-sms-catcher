@@ -170,6 +170,22 @@
             flex-wrap: wrap;
         }
 
+        .message-title {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .unread-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 999px;
+            background: var(--accent);
+            display: inline-block;
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
+            flex-shrink: 0;
+        }
+
         .message-from {
             color: var(--muted);
             font-size: 0.85rem;
