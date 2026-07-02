@@ -18,8 +18,8 @@ class MessageRepositoryTest extends TestCase
     {
         parent::setUp();
 
-        $directory = sys_get_temp_dir() . '/sms-catcher-tests-' . uniqid('', true);
-        $this->storagePath = $directory . '/messages.json';
+        $directory = sys_get_temp_dir().'/sms-catcher-tests-'.uniqid('', true);
+        $this->storagePath = $directory.'/messages.json';
     }
 
     protected function tearDown(): void
@@ -45,7 +45,8 @@ class MessageRepositoryTest extends TestCase
 
         Carbon::setTestNow(Carbon::parse('2024-01-01 12:00:00', 'UTC'));
 
-        $notifiable = new class {
+        $notifiable = new class
+        {
             public string $name = 'Tester';
 
             public function routeNotificationFor(string $channel): ?string
@@ -54,11 +55,12 @@ class MessageRepositoryTest extends TestCase
             }
         };
 
-        $notification = new class extends Notification {
+        $notification = new class extends Notification
+        {
             public function toSms($notifiable): array
             {
                 return [
-                    'body' => 'Hello ' . $notifiable->name,
+                    'body' => 'Hello '.$notifiable->name,
                     'from' => 'App',
                     'meta' => ['foo' => 'bar'],
                 ];
@@ -91,11 +93,13 @@ class MessageRepositoryTest extends TestCase
 
         Carbon::setTestNow(Carbon::parse('2024-01-01 12:05:00', 'UTC'));
 
-        $notifiable = new class {
+        $notifiable = new class
+        {
             public string $phone = '+15550000002';
         };
 
-        $notification = new class extends Notification {
+        $notification = new class extends Notification
+        {
             public function toSms($notifiable): string
             {
                 return 'Fallback Test';
@@ -119,14 +123,16 @@ class MessageRepositoryTest extends TestCase
     {
         $repository = new MessageRepository($this->storagePath);
 
-        $notifiable = new class {
+        $notifiable = new class
+        {
             public string $phone = '+15550000003';
         };
 
-        $notification = new class extends Notification {
+        $notification = new class extends Notification
+        {
             public function toSms($notifiable): string
             {
-                return 'Message ' . $notifiable->phone;
+                return 'Message '.$notifiable->phone;
             }
         };
 
