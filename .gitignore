@@ -4,5 +4,5 @@ composer.lock
 .env
 .phpunit.result.cache
 .phpunit.cache/
-screenshots/
+/screenshots/
 sms-catcher.json

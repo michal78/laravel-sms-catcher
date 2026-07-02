@@ -16,7 +16,7 @@ class SmsCatcherServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/sms-catcher.php', 'sms-catcher');
+        $this->mergeConfigFrom(__DIR__.'/../config/sms-catcher.php', 'sms-catcher');
 
         $this->app->singleton(MessageRepository::class, function ($app) {
             return new MessageRepository(config('sms-catcher.storage_path'));
@@ -29,12 +29,12 @@ class SmsCatcherServiceProvider extends ServiceProvider
     public function boot(Dispatcher $events): void
     {
         $this->publishes([
-            __DIR__ . '/../config/sms-catcher.php' => config_path('sms-catcher.php'),
+            __DIR__.'/../config/sms-catcher.php' => config_path('sms-catcher.php'),
         ], 'sms-catcher-config');
 
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'sms-catcher');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'sms-catcher');
 
-        if (!config('sms-catcher.enabled')) {
+        if (! config('sms-catcher.enabled')) {
             return;
         }
 
@@ -63,7 +63,7 @@ class SmsCatcherServiceProvider extends ServiceProvider
             /** @var MessageRepository $repository */
             $repository = $this->app->make(MessageRepository::class);
             $repository->storeFromEvent($event);
-            
+
             // Return false to prevent the SMS from being actually sent
             return false;
         });

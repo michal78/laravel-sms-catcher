@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use JsonException;
 use JsonSerializable;
-use ReflectionException;
 use ReflectionProperty;
 use Stringable;
 use Throwable;
@@ -19,7 +18,7 @@ class MessageRepository
     {
         $directory = dirname($this->path);
 
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             mkdir($directory, 0777, true);
         }
     }
@@ -102,7 +101,7 @@ class MessageRepository
     {
         $notification = $event->notification;
 
-        if (!method_exists($notification, 'toSms')) {
+        if (! method_exists($notification, 'toSms')) {
             return null;
         }
 
@@ -180,7 +179,7 @@ class MessageRepository
             }
 
             $vars = get_object_vars($smsMessage);
-            if (!empty($vars)) {
+            if (! empty($vars)) {
                 $normalized = $this->normalizeArrayPayload($vars);
 
                 if ($normalized !== null) {
@@ -189,7 +188,7 @@ class MessageRepository
             }
 
             $castVars = $this->extractObjectVariables($smsMessage);
-            if (!empty($castVars)) {
+            if (! empty($castVars)) {
                 $normalized = $this->normalizeArrayPayload($castVars);
 
                 if ($normalized !== null) {
@@ -243,7 +242,7 @@ class MessageRepository
 
         $extra = array_filter($payload, fn ($value) => $value !== null);
 
-        if (!empty($extra)) {
+        if (! empty($extra)) {
             $normalized['extra'] = $extra;
         }
 
@@ -253,7 +252,7 @@ class MessageRepository
     protected function extractStringFromArray(array $payload, array $candidates): ?string
     {
         foreach ($candidates as $key) {
-            if (!array_key_exists($key, $payload)) {
+            if (! array_key_exists($key, $payload)) {
                 continue;
             }
 
@@ -322,23 +321,23 @@ class MessageRepository
     protected function readPropertyValue(object $smsMessage, array $properties): ?string
     {
         foreach ($properties as $property) {
-            if (!property_exists($smsMessage, $property)) {
+            if (! property_exists($smsMessage, $property)) {
+                continue;
+            }
+
+            $reflection = new ReflectionProperty($smsMessage, $property);
+
+            if (! $reflection->isPublic()) {
+                $reflection->setAccessible(true);
+            }
+
+            if (! $reflection->isInitialized($smsMessage)) {
                 continue;
             }
 
             try {
-                $reflection = new ReflectionProperty($smsMessage, $property);
-
-                if (!$reflection->isPublic()) {
-                    $reflection->setAccessible(true);
-                }
-
-                if (method_exists($reflection, 'isInitialized') && !$reflection->isInitialized($smsMessage)) {
-                    continue;
-                }
-
                 $value = $reflection->getValue($smsMessage);
-            } catch (ReflectionException|Throwable) {
+            } catch (Throwable) {
                 continue;
             }
 
@@ -354,7 +353,7 @@ class MessageRepository
 
     protected function read(): array
     {
-        if (!file_exists($this->path)) {
+        if (! file_exists($this->path)) {
             return [];
         }
 

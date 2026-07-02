@@ -7,62 +7,135 @@
     <style>
         :root {
             color-scheme: light;
-            --bg: #f7fafc;
+            --bg: #f4f4f8;
+            --bg-accent: radial-gradient(circle at 15% -10%, rgba(129, 140, 248, 0.16), transparent 45%),
+                radial-gradient(circle at 85% 0%, rgba(56, 189, 248, 0.14), transparent 40%);
             --panel: #ffffff;
-            --border: #e2e8f0;
-            --accent: #38bdf8;
-            --text: #1a202c;
-            --muted: #4a5568;
-            --hover: rgba(56, 189, 248, 0.08);
+            --border: #e5e7eb;
+            --accent: #6366f1;
+            --accent-2: #38bdf8;
+            --accent-contrast: #ffffff;
+            --text: #14161f;
+            --muted: #6b7280;
+            --hover: rgba(99, 102, 241, 0.06);
+            --danger: #ef4444;
+            --shadow: rgba(20, 22, 31, 0.08);
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
                 color-scheme: dark;
-                --bg: #0f172a;
-                --panel: #111827;
-                --border: #1f2937;
-                --accent: #38bdf8;
-                --text: #e2e8f0;
-                --muted: #94a3b8;
-                --hover: rgba(56, 189, 248, 0.12);
+                --bg: #0a0b10;
+                --bg-accent: radial-gradient(circle at 15% -10%, rgba(99, 102, 241, 0.22), transparent 45%),
+                    radial-gradient(circle at 85% 0%, rgba(56, 189, 248, 0.16), transparent 40%);
+                --panel: #13141c;
+                --border: #23252f;
+                --accent: #818cf8;
+                --accent-2: #38bdf8;
+                --accent-contrast: #0a0b10;
+                --text: #e7e8ee;
+                --muted: #93949f;
+                --hover: rgba(129, 140, 248, 0.1);
+                --danger: #f87171;
+                --shadow: rgba(0, 0, 0, 0.35);
             }
         }
 
         html[data-theme="light"] {
             color-scheme: light;
-            --bg: #f7fafc;
+            --bg: #f4f4f8;
+            --bg-accent: radial-gradient(circle at 15% -10%, rgba(129, 140, 248, 0.16), transparent 45%),
+                radial-gradient(circle at 85% 0%, rgba(56, 189, 248, 0.14), transparent 40%);
             --panel: #ffffff;
-            --border: #e2e8f0;
-            --accent: #38bdf8;
-            --text: #1a202c;
-            --muted: #4a5568;
-            --hover: rgba(56, 189, 248, 0.08);
+            --border: #e5e7eb;
+            --accent: #6366f1;
+            --accent-2: #38bdf8;
+            --accent-contrast: #ffffff;
+            --text: #14161f;
+            --muted: #6b7280;
+            --hover: rgba(99, 102, 241, 0.06);
+            --danger: #ef4444;
+            --shadow: rgba(20, 22, 31, 0.08);
         }
 
         html[data-theme="dark"] {
             color-scheme: dark;
-            --bg: #0f172a;
-            --panel: #111827;
-            --border: #1f2937;
-            --accent: #38bdf8;
-            --text: #e2e8f0;
-            --muted: #94a3b8;
-            --hover: rgba(56, 189, 248, 0.12);
+            --bg: #0a0b10;
+            --bg-accent: radial-gradient(circle at 15% -10%, rgba(99, 102, 241, 0.22), transparent 45%),
+                radial-gradient(circle at 85% 0%, rgba(56, 189, 248, 0.16), transparent 40%);
+            --panel: #13141c;
+            --border: #23252f;
+            --accent: #818cf8;
+            --accent-2: #38bdf8;
+            --accent-contrast: #0a0b10;
+            --text: #e7e8ee;
+            --muted: #93949f;
+            --hover: rgba(129, 140, 248, 0.1);
+            --danger: #f87171;
+            --shadow: rgba(0, 0, 0, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg);
+            font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Inter, sans-serif;
+            background-color: var(--bg);
+            background-image: var(--bg-accent);
+            background-attachment: fixed;
             color: var(--text);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.25rem 2rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: color-mix(in srgb, var(--bg) 78%, transparent);
+            border-bottom: 1px solid transparent;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: -0.01em;
+        }
+
+        .brand-mark {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 0.65rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            box-shadow: 0 8px 20px -6px var(--accent);
+            color: #fff;
+        }
+
+        .brand-badge {
+            background: var(--hover);
+            color: var(--accent);
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
         }
 
         .theme-toggle {
-            position: fixed;
-            top: 1.25rem;
-            right: 1.25rem;
-            z-index: 10;
             width: 2.5rem;
             height: 2.5rem;
             border-radius: 999px;
@@ -72,42 +145,26 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             cursor: pointer;
-            transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 6px 16px var(--shadow);
         }
 
         .theme-toggle:hover {
             transform: translateY(-1px);
-            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+            border-color: var(--accent);
         }
 
         .theme-toggle:focus-visible {
             outline: 2px solid var(--accent);
-            outline-offset: 4px;
+            outline-offset: 3px;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1180px;
             margin: 0 auto;
-            padding: 2rem;
-        }
-
-        h1 {
-            font-size: 1.75rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        h1 span {
-            background: var(--accent);
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.5rem;
-            font-size: 0.9rem;
+            padding: 0.5rem 2rem 3rem;
         }
 
         .grid {
@@ -118,9 +175,9 @@
 
         .panel {
             background: var(--panel);
-            border-radius: 1rem;
+            border-radius: 1.1rem;
             border: 1px solid var(--border);
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+            box-shadow: 0 20px 40px -24px var(--shadow);
             overflow: hidden;
         }
 
@@ -128,19 +185,21 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1rem 1.5rem;
+            gap: 1rem;
+            padding: 1.1rem 1.5rem;
             border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
         }
 
         .message-list {
-            max-height: 540px;
+            max-height: 560px;
             overflow-y: auto;
         }
 
         .message {
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.3rem;
             padding: 1rem 1.5rem;
             border-bottom: 1px solid var(--border);
             text-decoration: none;
@@ -180,9 +239,9 @@
             width: 0.5rem;
             height: 0.5rem;
             border-radius: 999px;
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
             display: inline-block;
-            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.15);
+            box-shadow: 0 0 0 3px var(--hover);
             flex-shrink: 0;
         }
 
@@ -241,22 +300,22 @@
 
         .actions {
             display: flex;
-            gap: 0.75rem;
+            gap: 0.6rem;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.35rem;
-            border: none;
-            background: rgba(148, 163, 184, 0.25);
+            gap: 0.4rem;
+            border: 1px solid var(--border);
+            background: var(--panel);
             color: inherit;
-            padding: 0.5rem 0.85rem;
-            border-radius: 0.5rem;
+            padding: 0.5rem 0.9rem;
+            border-radius: 0.6rem;
             cursor: pointer;
-            transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            font-size: 0.9rem;
+            transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            font-size: 0.85rem;
             text-decoration: none;
             font-weight: 500;
             appearance: none;
@@ -265,38 +324,53 @@
         }
 
         .btn:hover {
-            background: rgba(56, 189, 248, 0.25);
+            border-color: var(--accent);
             transform: translateY(-1px);
-            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
+            box-shadow: 0 10px 20px var(--shadow);
         }
 
         .btn-primary {
-            background: var(--accent);
-            color: #ffffff;
-            box-shadow: 0 10px 20px rgba(56, 189, 248, 0.25);
-        }
-
-        .btn-primary:hover {
-            background: #0ea5e9;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            color: var(--accent-contrast);
+            border-color: transparent;
+            box-shadow: 0 10px 20px -8px var(--accent);
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: #ffffff;
-            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+            background: transparent;
+            color: var(--danger);
+            border-color: color-mix(in srgb, var(--danger) 40%, transparent);
         }
 
         .btn-danger:hover {
-            background: linear-gradient(135deg, #f87171, #b91c1c);
+            background: color-mix(in srgb, var(--danger) 10%, transparent);
+            border-color: var(--danger);
         }
 
         .empty {
-            padding: 2rem;
+            padding: 3rem 2rem;
             text-align: center;
             color: var(--muted);
         }
 
+        .empty-icon {
+            width: 3rem;
+            height: 3rem;
+            margin: 0 auto 1rem;
+            border-radius: 999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--hover);
+            color: var(--accent);
+        }
+
         @media (max-width: 960px) {
+            .topbar, .container {
+                padding-left: 1.25rem;
+                padding-right: 1.25rem;
+            }
+
             .grid {
                 grid-template-columns: 1fr;
             }
@@ -310,13 +384,19 @@
     @stack('head')
 </head>
 <body>
-<button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch theme" title="Switch theme"></button>
-<div class="container">
-    <h1>
+<div class="topbar">
+    <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 4h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H8l-4 4V5a1 1 0 0 1 1-1Z" fill="currentColor"/>
+            </svg>
+        </span>
         SMS Catcher
-        <span>dev</span>
-    </h1>
-
+        <span class="brand-badge">dev</span>
+    </div>
+    <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Switch theme" title="Switch theme"></button>
+</div>
+<div class="container">
     @yield('content')
 </div>
 <script>

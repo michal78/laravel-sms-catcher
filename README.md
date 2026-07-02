@@ -1,6 +1,7 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/michal78/laravel-sms-catcher.svg)](https://packagist.org/packages/michal78/laravel-sms-catcher)
 [![Total Downloads](https://img.shields.io/packagist/dt/michal78/laravel-sms-catcher.svg)](https://packagist.org/packages/michal78/laravel-sms-catcher)
 [![License](https://img.shields.io/packagist/l/michal78/laravel-sms-catcher.svg)](https://packagist.org/packages/michal78/laravel-sms-catcher)
+[![Tests](https://github.com/michal78/laravel-sms-catcher/actions/workflows/tests.yml/badge.svg)](https://github.com/michal78/laravel-sms-catcher/actions/workflows/tests.yml)
 
 # Laravel SMS Catcher
 
@@ -9,21 +10,22 @@ A development-only Laravel package that captures SMS notifications and displays 
 ## Screenshots
 
 ### SMS Inbox Dashboard
-Click to view full-size images:
 
-<a href="https://github.com/user-attachments/assets/9ef222e5-6a16-4fbb-a032-2558cb9edffa" target="_blank">
-  <img width="600" alt="SMS Catcher inbox showing list of captured messages" src="https://github.com/user-attachments/assets/9ef222e5-6a16-4fbb-a032-2558cb9edffa" />
-</a>
+<img alt="SMS Catcher inbox showing a list of captured messages, light mode" src="docs/screenshots/inbox-light.png" width="600" />
+<img alt="SMS Catcher inbox showing a list of captured messages, dark mode" src="docs/screenshots/inbox-dark.png" width="600" />
 
-*The main inbox view displays all captured SMS messages with sender, recipient, and timestamp information.*
+*The main inbox view displays all captured SMS messages with sender, recipient, and timestamp information, and supports light/dark themes.*
 
 ### Message Detail View
 
-<a href="https://github.com/user-attachments/assets/be6b171d-9fcb-467c-9093-1f67faac35cf" target="_blank">
-  <img width="600" alt="SMS message detail view with phone-style preview" src="https://github.com/user-attachments/assets/be6b171d-9fcb-467c-9093-1f67faac35cf" />
-</a>
+<img alt="SMS message detail view with phone-style preview" src="docs/screenshots/message-detail.png" width="600" />
 
-*Click any message to see the full details in a beautiful phone-style preview, making it easy to verify how your SMS will appear to recipients.*
+*Click any message to see the full details alongside a phone-style preview (with a device selector), making it easy to verify how your SMS will appear to recipients.*
+
+## Requirements
+
+- PHP 8.2+
+- Laravel (`illuminate/support` and `illuminate/notifications`) 10.x, 11.x, 12.x, or 13.x
 
 ## Installation
 
@@ -76,3 +78,29 @@ Messages are stored as JSON within your application's storage folder (`storage/l
 ## Security
 
 This package is intended for local development only. Do not enable it in production environments.
+
+## Development
+
+Install dependencies and run the test suite, code style checks, and static analysis locally:
+
+```bash
+composer install
+composer test          # PHPUnit
+composer format:test   # Laravel Pint (--test)
+composer format         # Laravel Pint (auto-fix)
+composer analyse        # PHPStan / Larastan
+```
+
+These same checks run automatically on every push and pull request via GitHub Actions (see `.github/workflows`).
+
+## Changelog
+
+Please see [CHANGELOG.md](CHANGELOG.md) for recent changes.
+
+## Contributing
+
+Issues and pull requests are welcome. Please run `composer test`, `composer format:test`, and `composer analyse` before submitting a PR.
+
+## License
+
+The MIT License (MIT). Please see [LICENSE](LICENSE) for more information.

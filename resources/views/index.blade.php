@@ -67,6 +67,11 @@ function updateMessageList(messages) {
     if (messages.length === 0) {
         messageList.innerHTML = `
             <div class="empty">
+                <div class="empty-icon" aria-hidden="true">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 4h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H8l-4 4V5a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.5"/>
+                    </svg>
+                </div>
                 <p>No SMS notifications have been captured yet.</p>
                 <p>Trigger a notification using the <code>sms</code> channel to see it appear here.</p>
             </div>
@@ -196,12 +201,12 @@ window.addEventListener('beforeunload', function() {
             <div class="actions">
                 <button class="btn" id="auto-update-toggle" onclick="toggleAutoUpdate()">
                     <span id="toggle-text">Enable auto-update</span>
-                    <span id="toggle-status" style="display: none; color: #38bdf8; margin-left: 4px;">●</span>
+                    <span id="toggle-status" style="display: none; color: var(--accent-2); margin-left: 4px;">●</span>
                 </button>
                 <form method="POST" action="{{ route('sms-catcher.clear') }}">
                     @csrf
                     @method('DELETE')
-                    <button class="btn" type="submit">Clear inbox</button>
+                    <button class="btn btn-danger" type="submit">Clear inbox</button>
                 </form>
             </div>
         </div>
@@ -224,6 +229,11 @@ window.addEventListener('beforeunload', function() {
                 </a>
             @empty
                 <div class="empty">
+                    <div class="empty-icon" aria-hidden="true">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 4h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H8l-4 4V5a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                    </div>
                     <p>No SMS notifications have been captured yet.</p>
                     <p>Trigger a notification using the <code>sms</code> channel to see it appear here.</p>
                 </div>
