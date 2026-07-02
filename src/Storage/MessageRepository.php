@@ -4,6 +4,7 @@ namespace SmsCatcher\Storage;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Notifications\Events\NotificationSending;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use JsonException;
@@ -55,7 +56,7 @@ class MessageRepository
             }
 
             if (empty($message['read_at'])) {
-                $message['read_at'] = now()->toIso8601String();
+                $message['read_at'] = Carbon::now()->toIso8601String();
                 $messages[$index] = $message;
             }
 
@@ -119,7 +120,7 @@ class MessageRepository
             'from' => $content['from'] ?? null,
             'body' => $content['body'],
             'notification' => $notification::class,
-            'timestamp' => now()->toIso8601String(),
+            'timestamp' => Carbon::now()->toIso8601String(),
             'read_at' => null,
             'extra' => $content['extra'] ?? [],
         ];

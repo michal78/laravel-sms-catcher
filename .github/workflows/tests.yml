@@ -35,6 +35,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          composer remove --dev --no-interaction --no-update orchestra/testbench larastan/larastan laravel/pint
           composer require "illuminate/support:${{ matrix.laravel }}" "illuminate/notifications:${{ matrix.laravel }}" --no-interaction --no-update
           composer update --prefer-dist --no-interaction --no-progress
 

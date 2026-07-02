@@ -20,9 +20,10 @@
         "illuminate/notifications": "^10.0|^11.0|^12.0|^13.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^9.0|^10.0|^11.0",
         "laravel/pint": "^1.18",
-        "larastan/larastan": "^2.9|^3.0"
+        "larastan/larastan": "^2.9|^3.0",
+        "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
+        "phpunit/phpunit": "^10.5|^11.0|^12.0"
     },
     "autoload": {
         "psr-4": {
@@ -48,7 +49,19 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "audit": {
+            "ignore": {
+                "CVE-2026-48019": "CRLF injection in Laravel's default email validation rule (illuminate/mail); this package never uses that rule, illuminate/mail is only pulled in transitively via illuminate/notifications for CI compatibility testing."
+            }
+        },
+        "policy": {
+            "advisories": {
+                "ignore-id": {
+                    "CVE-2026-48019": "CRLF injection in Laravel's default email validation rule (illuminate/mail); this package never uses that rule, illuminate/mail is only pulled in transitively via illuminate/notifications for CI compatibility testing."
+                }
+            }
+        }
     },
     "minimum-stability": "stable",
     "prefer-stable": true
