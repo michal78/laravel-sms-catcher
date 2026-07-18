@@ -6,6 +6,7 @@ use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Notifications\Events\NotificationSending;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use SmsCatcher\Console\Commands\McpServerCommand;
 use SmsCatcher\Http\Controllers\SmsMessageController;
 use SmsCatcher\Storage\MessageRepository;
 
@@ -40,6 +41,7 @@ class SmsCatcherServiceProvider extends ServiceProvider
 
         $this->registerRoutes();
         $this->registerListeners($events);
+        $this->commands([McpServerCommand::class]);
     }
 
     protected function registerRoutes(): void
