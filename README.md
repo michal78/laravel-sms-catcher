@@ -75,6 +75,58 @@ Messages are stored as JSON within your application's storage folder (`storage/l
 
 > **Note**: The catcher inspects notifications by invoking their `toSms` method. Ensure your notifications implement this method and return either a string, array, or object containing the text body.
 
+## AI Agent Integration (MCP)
+
+SMS Catcher ships an [MCP (Model Context Protocol)](https://modelcontextprotocol.io/) server that lets AI coding agents — GitHub Copilot, Cursor, Claude Desktop, and others — inspect captured messages directly from their context window without switching to a browser.
+
+### Start the server
+
+```bash
+php artisan sms-catcher:mcp
+```
+
+The command runs a stdio MCP server that exposes four tools:
+
+| Tool | Description |
+|------|-------------|
+| `list_messages` | Return all captured messages sorted newest-first |
+| `get_message` | Fetch one message by ID and mark it as read |
+| `delete_message` | Delete one message by ID |
+| `clear_messages` | Delete all messages |
+
+### Configure your AI client
+
+Add the following to your MCP client configuration. Substitute the correct path to your application's `artisan` script.
+
+**GitHub Copilot** (`.vscode/mcp.json` or `.github/copilot/mcp.json`):
+
+```json
+{
+    "servers": {
+        "sms-catcher": {
+            "type": "stdio",
+            "command": "php",
+            "args": ["/absolute/path/to/artisan", "sms-catcher:mcp"]
+        }
+    }
+}
+```
+
+**Cursor / Claude Desktop** (`.cursor/mcp.json` or `claude_desktop_config.json`):
+
+```json
+{
+    "mcpServers": {
+        "sms-catcher": {
+            "command": "php",
+            "args": ["/absolute/path/to/artisan", "sms-catcher:mcp"]
+        }
+    }
+}
+```
+
+> **Note**: The MCP server is only available when `sms-catcher.enabled` is `true` (i.e. in local development). It reads from the same JSON file used by the web dashboard, so no additional configuration is required.
+
 ## Security
 
 This package is intended for local development only. Do not enable it in production environments.
